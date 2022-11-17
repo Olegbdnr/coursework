@@ -1,6 +1,1 @@
 id,streetLocation,currentCash,cashLoadingDate,cashCollectingDate,snackLoadingDate,lastCashLoaderId,lastCashCollectorId,lastSnackLoaderId
-1,Zubrivska,1305.0,13/04/2004,13/04/2004,13/04/2004,3,5,4
-2,Pidvalna,800.50,13/04/2022,13/04/2022,13/04/2022,1,2,3
-3,Sihivska,700.9,13/06/2022,15/06/2022,20/06/2022,4,4,5
-4,Luganska,150.1,01/06/2022,02/06/2022,01/06/2022,1,1,1
-5,Andriivska,999.1,01/06/2022,02/06/2022,01/06/2022,2,2,3
