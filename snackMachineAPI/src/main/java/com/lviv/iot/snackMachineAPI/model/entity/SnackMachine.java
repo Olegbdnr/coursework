@@ -21,7 +21,9 @@ public class SnackMachine {
     private String streetLocation;
     private List<Snack> currentSnackList;
 
-    public SnackMachine(Long id, String streetLocation, List<Snack> currentSnackList, Float currentCash, Date cashLoadingDate, Date cashCollectingDate, Date snackLoadingDate, Integer lastCashLoaderId, Integer lastCashCollectorId, Integer lastSnackLoaderId) {
+    public SnackMachine(Long id, String streetLocation, List<Snack> currentSnackList, Float currentCash,
+                        Date cashLoadingDate, Date cashCollectingDate, Date snackLoadingDate, Long lastCashLoaderId,
+                        Long lastCashCollectorId, Long lastSnackLoaderId) {
         this.id = id;
         this.streetLocation = streetLocation;
         this.currentSnackList = currentSnackList;
@@ -38,9 +40,9 @@ public class SnackMachine {
     private Date cashLoadingDate;
     private Date cashCollectingDate;
     private Date snackLoadingDate;
-    private Integer lastCashLoaderId;
-    private Integer lastCashCollectorId;
-    private Integer lastSnackLoaderId;
+    private Long lastCashLoaderId;
+    private Long lastCashCollectorId;
+    private Long lastSnackLoaderId;
 
     public String headers() {
         return "id,streetLocation,currentCash,cashLoadingDate,cashCollectingDate,snackLoadingDate,lastCashLoaderId," +

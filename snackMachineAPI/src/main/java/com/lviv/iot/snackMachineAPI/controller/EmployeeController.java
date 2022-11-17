@@ -2,9 +2,9 @@ package com.lviv.iot.snackMachineAPI.controller;
 
 import com.lviv.iot.snackMachineAPI.model.dao.exceptions.EntityExistException;
 import com.lviv.iot.snackMachineAPI.model.dao.exceptions.EntityNotExistException;
-import com.lviv.iot.snackMachineAPI.model.entity.SnackMachine;
-import com.lviv.iot.snackMachineAPI.model.service.SnackMachineService;
-import com.lviv.iot.snackMachineAPI.model.service.impl.SnackMachineServiceImpl;
+import com.lviv.iot.snackMachineAPI.model.entity.Employee;
+import com.lviv.iot.snackMachineAPI.model.entity.Snack;
+import com.lviv.iot.snackMachineAPI.model.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,17 +13,17 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-public class SnackMachineController {
+public class EmployeeController {
     @Autowired
-    SnackMachineService service;
+    EmployeeService service;
 
-    @GetMapping(path = "machine")
-    public List<SnackMachine> getAll() {
+    @GetMapping(path = "employee")
+    public List<Employee> getAll() {
         return service.findAll();
     }
 
-    @GetMapping(path = "machine/{id}")
-    public SnackMachine getById(@PathVariable("id") Long id) {
+    @GetMapping(path = "employee/{id}")
+    public Employee getById(@PathVariable("id") Long id) {
         try {
             return service.findById(id);
         } catch (EntityNotExistException e) {
@@ -31,16 +31,16 @@ public class SnackMachineController {
         }
     }
 
-    @PostMapping(path = "machine")
-    public void post(@RequestBody SnackMachine machine) {
+    @PostMapping(path = "employee")
+    public void post(@RequestBody Employee employee) {
         try {
-            service.save(machine);
+            service.save(employee);
         } catch (EntityExistException | EntityNotExistException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
-    @DeleteMapping(path = "machine/{id}")
+    @DeleteMapping(path = "employee/{id}")
     public void delete(@PathVariable("id") Long id) {
         try {
             service.delete(id);
@@ -49,10 +49,10 @@ public class SnackMachineController {
         }
     }
 
-    @PutMapping(path = "machine")
-    public void update(@RequestBody SnackMachine machine) {
+    @PutMapping(path = "employee")
+    public void update(@RequestBody Employee employee) {
         try {
-            service.update(machine.getId(), machine);
+            service.update(employee.getId(), employee);
         } catch (EntityNotExistException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

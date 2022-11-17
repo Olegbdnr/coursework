@@ -1,6 +1,7 @@
 package com.lviv.iot.snackMachineAPI.model.service.impl;
 
 import com.lviv.iot.snackMachineAPI.model.dao.Impl.SnackMachineRepositoryImpl;
+import com.lviv.iot.snackMachineAPI.model.dao.SnackMachineRepository;
 import com.lviv.iot.snackMachineAPI.model.dao.exceptions.EntityExistException;
 import com.lviv.iot.snackMachineAPI.model.dao.exceptions.EntityNotExistException;
 import com.lviv.iot.snackMachineAPI.model.entity.SnackMachine;
@@ -13,10 +14,10 @@ import java.util.List;
 @Service
 public class SnackMachineServiceImpl implements SnackMachineService {
     @Autowired
-    SnackMachineRepositoryImpl storage;
+    SnackMachineRepository storage;
 
     @Override
-    public void save(SnackMachine machine) throws EntityExistException {
+    public void save(SnackMachine machine) throws EntityExistException, EntityNotExistException {
         storage.save(machine);
     }
 

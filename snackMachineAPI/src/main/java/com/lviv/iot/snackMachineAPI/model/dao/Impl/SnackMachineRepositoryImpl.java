@@ -22,26 +22,27 @@ public class SnackMachineRepositoryImpl implements SnackMachineRepository {
     private EntityCSV csvManager;
     private Map<Long, SnackMachine> storage = new HashMap<>();
 
-    public void save(SnackMachine machine) throws EntityExistException {
+    @Override
+    public void save(SnackMachine machine) throws EntityExistException, EntityNotExistException {
         csvManager.writeSnackMachine(machine);
     }
 
+    @Override
     public void delete(Long id) throws EntityNotExistException {
         csvManager.deleteSnackMachineById(id);
     }
 
+    @Override
     public SnackMachine findById(Long id) throws EntityNotExistException {
-        SnackMachine fileEntity = null;
-        fileEntity = csvManager.getSnackMachineById(id);
-        return fileEntity;
+        return csvManager.getSnackMachineById(id);
     }
 
+    @Override
     public List<SnackMachine> findAll() {
-        List<SnackMachine> allEntities = csvManager.getAll();
-        //ToDo: compare allEntities to repository entities
-        return allEntities;
+        return csvManager.getAllMachines();
     }
 
+    @Override
     public void update(Long id, SnackMachine machine) throws EntityNotExistException {
         csvManager.updateSnackMachine(id, machine);
         //ToDo: check if fileEntity correspond to entity exist in repository
