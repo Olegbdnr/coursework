@@ -1,4 +1,5 @@
 id,snackMachineId,manufacturer,snackType,amount
-1,22,Chips,Chips,25
-2,22,Pringles,Chips,55
-3,22,Lays,Chips,55
+1,1,Lays,Chips,10
+2,1,Pringles,Chips,10
+3,1,Chipsters,Chips,30
+4,2,Lays,Chips,50

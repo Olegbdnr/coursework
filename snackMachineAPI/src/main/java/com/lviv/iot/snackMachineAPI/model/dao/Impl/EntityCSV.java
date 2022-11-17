@@ -40,11 +40,18 @@ public class EntityCSV {
         this.employeeFile = new File(this.employeePath);
     }
 
+    public EntityCSV(File snackMachineFile, File snackFile, File employeeFile) {
+        this.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        this.snackMachineFile = snackMachineFile;
+        this.snackFile = snackFile;
+        this.employeeFile = employeeFile;
+    }
+
     private List<SnackMachine> getAllSnackMachinesFromFile() {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(snackMachineFile));
             reader.readLine();
-            String line;
+            String line = null;
             List<SnackMachine> snackMachineList = new LinkedList<>();
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
@@ -64,6 +71,9 @@ public class EntityCSV {
                         lastCashLoaderId, lastCashCollectorId, lastSnackLoaderId));
             }
             reader.close();
+            for (SnackMachine machine : snackMachineList) {
+                System.out.println(machine.toCSV());
+            }
             return snackMachineList;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -178,8 +188,10 @@ public class EntityCSV {
 
     private boolean isMachineExist(SnackMachine machine) {
         List<SnackMachine> currentMachines = getAllSnackMachinesFromFile();
+        System.out.println(machine.getId());
         List<Long> idList = new LinkedList<>();
-        currentMachines.forEach(snackMachine -> idList.add(machine.getId()));
+        currentMachines.forEach(snackMachine -> idList.add(snackMachine.getId()));
+        System.out.println(idList.contains(machine.getId()));
         return idList.contains(machine.getId());
     }
 
@@ -236,6 +248,10 @@ public class EntityCSV {
 
     public List<SnackMachine> getAllMachines() {
         return getAllSnackMachinesFromFile();
+    }
+
+    public SnackMachine getMachineById(Long id) throws EntityNotExistException {
+        return getSnackMachineByIdFromFile(id);
     }
 
     public void deleteSnackMachineById(Long id) throws EntityNotExistException {

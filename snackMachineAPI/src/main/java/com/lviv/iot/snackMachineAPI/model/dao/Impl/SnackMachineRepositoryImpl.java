@@ -60,7 +60,7 @@ public class SnackMachineRepositoryImpl implements SnackMachineRepository {
         if (storage.isEmpty()) {
             fillSnackMachinesFromFile();
         }
-        return storage.values().stream().toList();
+        return csvManager.getAllMachines();
     }
 
     @Override
