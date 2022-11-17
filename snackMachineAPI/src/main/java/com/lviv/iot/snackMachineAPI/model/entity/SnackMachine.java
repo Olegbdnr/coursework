@@ -1,6 +1,9 @@
 package com.lviv.iot.snackMachineAPI.model.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -45,14 +48,14 @@ public class SnackMachine {
     private Long lastSnackLoaderId;
 
     public String headers() {
-        return "id,streetLocation,currentCash,cashLoadingDate,cashCollectingDate,snackLoadingDate,lastCashLoaderId," +
-                "lastCashCollectorId,lastSnackLoaderId";
+        return "id,streetLocation,currentCash,cashLoadingDate,cashCollectingDate,snackLoadingDate,lastCashLoaderId,"
+                + "lastCashCollectorId,lastSnackLoaderId";
     }
 
-    public String toCSV () {
+    public String toCSV() {
         return this.id + "," + this.streetLocation + "," + this.currentCash + "," + dateFormat.format(cashLoadingDate)
-                + "," + dateFormat.format(cashCollectingDate) + "," + dateFormat.format(snackLoadingDate) + "," +
-                this.lastCashLoaderId + "," + this.lastCashCollectorId + "," + this.lastSnackLoaderId;
+                + "," + dateFormat.format(cashCollectingDate) + "," + dateFormat.format(snackLoadingDate) + ","
+                + this.lastCashLoaderId + "," + this.lastCashCollectorId + "," + this.lastSnackLoaderId;
     }
 
     public String getCashLoadingDate() {

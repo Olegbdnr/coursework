@@ -11,17 +11,20 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EntityCSV {
     private final SimpleDateFormat dateFormat;
-    private final String snackMachinePath = "C:\\Users\\38093\\OneDrive\\Рабочий стол\\Repos\\" +
-            "coursework\\snackMachineAPI\\src\\main\\java\\com\\lviv\\iot\\snackMachineAPI\\data\\snackMachine.csv";
-    private final String snackPath = "C:\\Users\\38093\\OneDrive\\Рабочий стол\\Repos\\" +
-            "coursework\\snackMachineAPI\\src\\main\\java\\com\\lviv\\iot\\snackMachineAPI\\data\\snack.csv";
-    private final String employeePath = "C:\\Users\\38093\\OneDrive\\Рабочий стол\\Repos\\" +
-            "coursework\\snackMachineAPI\\src\\main\\java\\com\\lviv\\iot\\snackMachineAPI\\data\\employee.csv";
+    private final String snackMachinePath = "C:\\Users\\38093\\OneDrive\\Рабочий стол\\Repos\\"
+            + "coursework\\snackMachineAPI\\src\\main\\java\\com\\lviv\\iot\\snackMachineAPI\\data\\snackMachine.csv";
+    private final String snackPath = "C:\\Users\\38093\\OneDrive\\Рабочий стол\\Repos\\"
+            + "coursework\\snackMachineAPI\\src\\main\\java\\com\\lviv\\iot\\snackMachineAPI\\data\\snack.csv";
+    private final String employeePath = "C:\\Users\\38093\\OneDrive\\Рабочий стол\\Repos\\"
+            + "coursework\\snackMachineAPI\\src\\main\\java\\com\\lviv\\iot\\snackMachineAPI\\data\\employee.csv";
     private final File snackMachineFile;
     private final File snackFile;
     private final File employeeFile;
@@ -41,14 +44,24 @@ public class EntityCSV {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(snackMachineFile));
             reader.readLine();
-            String line = null;
+            String line;
             List<SnackMachine> snackMachineList = new LinkedList<>();
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
-                snackMachineList.add(new SnackMachine(Long.valueOf(values[0]), values[1],
-                        getSnacksWithMachineId(Long.valueOf(values[0])), Float.valueOf(values[2]),
-                        dateFormat.parse(values[3]), dateFormat.parse(values[4]), dateFormat.parse(values[5]),
-                        Long.valueOf(values[6]), Long.valueOf(values[7]), Long.valueOf(values[8])));
+                Long snackMachineId = Long.valueOf(values[0]);
+                String streetLocation = values[1];
+                Float currentCash = Float.valueOf(values[2]);
+                List<Snack> currentSnackList = getSnacksWithMachineId(Long.valueOf(values[0]));
+                Date cashLoadingDate = dateFormat.parse(values[3]);
+                Date cashCollectingDate = dateFormat.parse(values[4]);
+                Date snackLoadingDate = dateFormat.parse(values[5]);
+                Long lastCashLoaderId = Long.valueOf(values[6]);
+                Long lastCashCollectorId = Long.valueOf(values[7]);
+                Long lastSnackLoaderId = Long.valueOf(values[8]);
+                snackMachineList.add(new SnackMachine(snackMachineId, streetLocation,
+                        currentSnackList, currentCash,
+                        cashLoadingDate, cashCollectingDate, snackLoadingDate,
+                        lastCashLoaderId, lastCashCollectorId, lastSnackLoaderId));
             }
             reader.close();
             return snackMachineList;
@@ -62,12 +75,17 @@ public class EntityCSV {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(snackFile));
             reader.readLine();
-            String line = null;
+            String line;
             List<Snack> snackList = new LinkedList<>();
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
-                snackList.add(new Snack(Long.valueOf(values[0]), Long.valueOf(values[1]), values[2],
-                        SnackType.valueOf(values[3]), Integer.valueOf(values[4])));
+                Long snackId = Long.valueOf(values[0]);
+                Long snackMachineId = Long.valueOf(values[1]);
+                String manufacturer = values[2];
+                SnackType snackType = SnackType.valueOf(values[3]);
+                Integer amount = Integer.valueOf(values[4]);
+                snackList.add(new Snack(snackId, snackMachineId, manufacturer,
+                        snackType, amount));
             }
             reader.close();
             return snackList;
@@ -81,11 +99,14 @@ public class EntityCSV {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(employeeFile));
             reader.readLine();
-            String line = null;
+            String line;
             List<Employee> employeeList = new LinkedList<>();
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
-                employeeList.add(new Employee(Long.valueOf(values[0]), values[1], values[2]));
+                Long employeeId = Long.valueOf(values[0]);
+                String name = values[1];
+                String surname = values[2];
+                employeeList.add(new Employee(employeeId, name, surname));
             }
             reader.close();
             return employeeList;
@@ -144,7 +165,7 @@ public class EntityCSV {
         return result.get();
     }
 
-    private List<Snack> getSnacksWithMachineId (Long id) {
+    private List<Snack> getSnacksWithMachineId(Long id) {
         List<Snack> allSnacks = getAllSnacks();
         List<Snack> snacksWithMachineId = new LinkedList<>();
         allSnacks.forEach(snack -> {
@@ -211,10 +232,6 @@ public class EntityCSV {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public SnackMachine getSnackMachineById(Long id) throws EntityNotExistException {
-        return getSnackMachineByIdFromFile(id);
     }
 
     public List<SnackMachine> getAllMachines() {
@@ -287,16 +304,6 @@ public class EntityCSV {
         }
     }
 
-    public Snack getSnackById(Long id) throws EntityNotExistException {
-        List<Snack> allSnacks = getAllSnacksFromFile();
-        Optional<Snack> result = allSnacks.stream().filter(snack ->
-                snack.getId().compareTo(id) == 0).findAny();
-        if (result.isEmpty()) {
-            throw new EntityNotExistException("Snack with id:" + id + " not exist");
-        }
-        return result.get();
-    }
-
     public List<Snack> getAllSnacks() {
         return getAllSnacksFromFile();
     }
@@ -364,16 +371,6 @@ public class EntityCSV {
         }
     }
 
-    public Employee getEmployeeById(Long id) throws EntityNotExistException {
-        List<Employee> allEmployees = getAllEmployeesFromFile();
-        Optional<Employee> result = allEmployees.stream().filter(employee ->
-                employee.getId().compareTo(id) == 0).findAny();
-        if (result.isEmpty()) {
-            throw new EntityNotExistException("Employee with id:" + id + " not exist");
-        }
-        return result.get();
-    }
-
     public List<Employee> getAllEmployees() {
         return getAllEmployeesFromFile();
     }
@@ -386,7 +383,7 @@ public class EntityCSV {
             throw new EntityNotExistException("Employee with id:" + id + " not exist");
         }
         List<Employee> updatedEmployees = new LinkedList<>();
-        updatedEmployees.forEach(employee -> {
+        currentEmployeesInFile.forEach(employee -> {
             if (employee.getId().compareTo(id) != 0) {
                 updatedEmployees.add(employee);
             }
