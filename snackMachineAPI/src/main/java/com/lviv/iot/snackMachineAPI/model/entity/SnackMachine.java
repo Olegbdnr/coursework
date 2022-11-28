@@ -1,6 +1,9 @@
 package com.lviv.iot.snackMachineAPI.model.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -20,6 +23,13 @@ public class SnackMachine {
     private Long id;
     private String streetLocation;
     private List<Snack> currentSnackList;
+    private Float currentCash;
+    private Date cashLoadingDate;
+    private Date cashCollectingDate;
+    private Date snackLoadingDate;
+    private Long lastCashLoaderId;
+    private Long lastCashCollectorId;
+    private Long lastSnackLoaderId;
 
     public SnackMachine(Long id, String streetLocation, List<Snack> currentSnackList, Float currentCash,
                         Date cashLoadingDate, Date cashCollectingDate, Date snackLoadingDate, Long lastCashLoaderId,
@@ -36,23 +46,15 @@ public class SnackMachine {
         this.lastSnackLoaderId = lastSnackLoaderId;
     }
 
-    private Float currentCash;
-    private Date cashLoadingDate;
-    private Date cashCollectingDate;
-    private Date snackLoadingDate;
-    private Long lastCashLoaderId;
-    private Long lastCashCollectorId;
-    private Long lastSnackLoaderId;
-
     public String headers() {
-        return "id,streetLocation,currentCash,cashLoadingDate,cashCollectingDate,snackLoadingDate,lastCashLoaderId," +
-                "lastCashCollectorId,lastSnackLoaderId";
+        return "id,streetLocation,currentCash,cashLoadingDate,cashCollectingDate,snackLoadingDate,lastCashLoaderId,"
+                + "lastCashCollectorId,lastSnackLoaderId";
     }
 
-    public String toCSV () {
+    public String toCSV() {
         return this.id + "," + this.streetLocation + "," + this.currentCash + "," + dateFormat.format(cashLoadingDate)
-                + "," + dateFormat.format(cashCollectingDate) + "," + dateFormat.format(snackLoadingDate) + "," +
-                this.lastCashLoaderId + "," + this.lastCashCollectorId + "," + this.lastSnackLoaderId;
+                + "," + dateFormat.format(cashCollectingDate) + "," + dateFormat.format(snackLoadingDate) + ","
+                + this.lastCashLoaderId + "," + this.lastCashCollectorId + "," + this.lastSnackLoaderId;
     }
 
     public String getCashLoadingDate() {

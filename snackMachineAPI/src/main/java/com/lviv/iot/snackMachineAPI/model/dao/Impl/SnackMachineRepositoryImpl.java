@@ -20,32 +20,55 @@ import java.util.Map;
 public class SnackMachineRepositoryImpl implements SnackMachineRepository {
     @Autowired
     private EntityCSV csvManager;
-    private Map<Long, SnackMachine> storage = new HashMap<>();
+    private final Map<Long, SnackMachine> storage = new HashMap<>();
+
+    private void fillSnackMachinesFromFile() {
+        List<SnackMachine> snackMachines = csvManager.getAllMachines();
+        for (SnackMachine snackMachine : snackMachines) {
+            storage.put(snackMachine.getId(), snackMachine);
+        }
+    }
 
     @Override
     public void save(SnackMachine machine) throws EntityExistException, EntityNotExistException {
+        if (storage.isEmpty()) {
+            fillSnackMachinesFromFile();
+        }
         csvManager.writeSnackMachine(machine);
+        storage.put(machine.getId(), machine);
     }
 
     @Override
     public void delete(Long id) throws EntityNotExistException {
+        if (storage.isEmpty()) {
+            fillSnackMachinesFromFile();
+        }
         csvManager.deleteSnackMachineById(id);
+        storage.remove(id);
     }
 
     @Override
     public SnackMachine findById(Long id) throws EntityNotExistException {
-        return csvManager.getSnackMachineById(id);
+        if (storage.isEmpty()) {
+            fillSnackMachinesFromFile();
+        }
+        return storage.get(id);
     }
 
     @Override
     public List<SnackMachine> findAll() {
+        if (storage.isEmpty()) {
+            fillSnackMachinesFromFile();
+        }
         return csvManager.getAllMachines();
     }
 
     @Override
     public void update(Long id, SnackMachine machine) throws EntityNotExistException {
+        if (storage.isEmpty()) {
+            fillSnackMachinesFromFile();
+        }
         csvManager.updateSnackMachine(id, machine);
-        //ToDo: check if fileEntity correspond to entity exist in repository
         storage.replace(id, machine);
     }
 }
